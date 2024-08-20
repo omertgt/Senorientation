@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Clients</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Menu latéral -->
+        <nav class="sidebar bg-light">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="user-dashboard.html"><i class="fas fa-tachometer-alt"></i> Tableau de bord</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="user-clients.html"><i class="fas fa-users"></i> Gestion des clients</a>
+                </li>
+                <li class="nav-item mt-auto">
+                    <button class="btn btn-danger w-100" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Contenu principal -->
+        <div class="content p-4">
+            <h1>Gestion des Clients</h1>
+
+            <!-- Formulaire de création de client -->
+            <div class="form-container">
+                <h2>Ajouter un Client</h2>
+                <form id="clientForm">
+                    <div class="mb-3">
+                        <label for="clientName" class="form-label">Nom du client</label>
+                        <input type="text" class="form-control" id="clientName" placeholder="Nom du client" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientEmail" class="form-label">Email du client</label>
+                        <input type="email" class="form-control" id="clientEmail" placeholder="Email du client" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientPhone" class="form-label">Téléphone du client</label>
+                        <input type="text" class="form-control" id="clientPhone" placeholder="Téléphone du client" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientCompany" class="form-label">Entreprise du client</label>
+                        <input type="text" class="form-control" id="clientCompany" placeholder="Entreprise du client">
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientStatus" class="form-label">Statut du client</label>
+                        <select class="form-select" id="clientStatus" required>
+                            <option value="new">Nouveau</option>
+                            <option value="pending">En attente</option>
+                            <option value="won">Gagné</option>
+                            <option value="unreachable">Injoignable</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientAddress" class="form-label">Adresse du client</label>
+                        <textarea class="form-control" id="clientAddress" placeholder="Adresse du client"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="clientNotes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="clientNotes" placeholder="Notes supplémentaires"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Ajouter</button>
+                </form>
+            </div>
+
+            <!-- Liste des clients -->
+            <div class="clients-container mt-4">
+                <h2>Liste des Clients</h2>
+                <ul id="clientList" class="list-group"></ul>
+            </div>
+
+            <!-- Modals -->
+            <!-- Modal pour la modification -->
+            <div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editClientModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editClientModalLabel">Modifier Client</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editClientForm">
+                                <input type="hidden" id="editClientId">
+                                <div class="mb-3">
+                                    <label for="editClientName" class="form-label">Nom du client</label>
+                                    <input type="text" class="form-control" id="editClientName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editClientEmail" class="form-label">Email du client</label>
+                                    <input type="email" class="form-control" id="editClientEmail" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editClientPhone" class="form-label">Téléphone du client</label>
+                                    <input type="text" class="form-control" id="editClientPhone" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editClientCompany" class="form-label">Entreprise du client</label>
+                                    <input type="text" class="form-control" id="editClientCompany">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editClientStatus" class="form-label">Statut du client</label>
+                                    <select class="form-select" id="editClientStatus" required>
+                                        <option value="new">Nouveau</option>
+                                        <option value="pending">En attente</option>
+                                        <option value="won">Gagné</option>
+                                        <option value="unreachable">Injoignable</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editClientAddress" class="form-label">Adresse du client</label>
+                                    <textarea class="form-control" id="editClientAddress"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editClientNotes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="editClientNotes"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal pour la suppression -->
+            <div class="modal fade" id="deleteClientModal" tabindex="-1" aria-labelledby="deleteClientModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteClientModalLabel">Confirmer la suppression</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Êtes-vous sûr de vouloir supprimer ce client ? Cette action est irréversible.</p>
+                            <input type="hidden" id="deleteClientId">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="button" class="btn btn-danger" id="confirmDeleteClientButton">Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!localStorage.getItem('token')) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const loadClients = async () => {
+                const response = await fetch('/api/user/clients', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const clients = await response.json();
+                const clientList = document.getElementById('clientList');
+                clientList.innerHTML = '';
+
+                clients.forEach(client => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                ${client.name} - ${client.email} - ${client.status}
+                            </div>
+                            <div>
+                                <button class="btn btn-primary btn-sm me-2" data-id="${client._id}" data-name="${client.name}" data-email="${client.email}" data-phone="${client.phone}" data-company="${client.company}" data-status="${client.status}" data-address="${client.address}" data-notes="${client.notes}" onclick="openEditClientModal(this)">Modifier</button>
+                                <button class="btn btn-danger btn-sm" data-id="${client._id}" onclick="openDeleteClientModal(this)">Supprimer</button>
+                            </div>
+                        </div>
+                    `;
+                    clientList.appendChild(li);
+                });
+            };
+
+            loadClients();
+
+            const clientForm = document.getElementById('clientForm');
+            clientForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const name = document.getElementById('clientName').value;
+                const email = document.getElementById('clientEmail').value;
+                const phone = document.getElementById('clientPhone').value;
+                const company = document.getElementById('clientCompany').value;
+                const status = document.getElementById('clientStatus').value;
+                const address = document.getElementById('clientAddress').value;
+                const notes = document.getElementById('clientNotes').value;
+
+                const response = await fetch('/api/user/clients', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ name, email, phone, company, status, address, notes })
+                });
+
+                if (response.ok) {
+                    clientForm.reset();
+                    loadClients(); // Rafraîchir la liste des clients après ajout
+                } else {
+                    alert('Erreur lors de l\'ajout du client');
+                }
+            });
+
+            document.getElementById('logoutButton').addEventListener('click', () => {
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            });
+        });
+
+        // Ouverture du modal d'édition
+        function openEditClientModal(button) {
+            const id = button.getAttribute('data-id');
+            const name = button.getAttribute('data-name');
+            const email = button.getAttribute('data-email');
+            const phone = button.getAttribute('data-phone');
+            const company = button.getAttribute('data-company');
+            const status = button.getAttribute('data-status');
+            const address = button.getAttribute('data-address');
+            const notes = button.getAttribute('data-notes');
+
+            document.getElementById('editClientId').value = id;
+            document.getElementById('editClientName').value = name;
+            document.getElementById('editClientEmail').value = email;
+            document.getElementById('editClientPhone').value = phone;
+            document.getElementById('editClientCompany').value = company;
+            document.getElementById('editClientStatus').value = status;
+            document.getElementById('editClientAddress').value = address;
+            document.getElementById('editClientNotes').value = notes;
+
+            const editClientModal = new bootstrap.Modal(document.getElementById('editClientModal'));
+            editClientModal.show();
+        }
+
+        // Sauvegarde des modifications
+        document.getElementById('editClientForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('editClientId').value;
+            const name = document.getElementById('editClientName').value;
+            const email = document.getElementById('editClientEmail').value;
+            const phone = document.getElementById('editClientPhone').value;
+            const company = document.getElementById('editClientCompany').value;
+            const status = document.getElementById('editClientStatus').value;
+            const address = document.getElementById('editClientAddress').value;
+            const notes = document.getElementById('editClientNotes').value;
+
+            const response = await fetch(`/api/user/clients/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ name, email, phone, company, status, address, notes })
+            });
+
+            if (response.ok) {
+                const editClientModal = bootstrap.Modal.getInstance(document.getElementById('editClientModal'));
+                editClientModal.hide();
+                loadClients(); // Rafraîchir la liste des clients après modification
+            } else {
+                alert('Erreur lors de la modification du client');
+            }
+        });
+
+        // Ouverture du modal de suppression
+        function openDeleteClientModal(button) {
+            const id = button.getAttribute('data-id');
+            document.getElementById('deleteClientId').value = id;
+
+            const deleteClientModal = new bootstrap.Modal(document.getElementById('deleteClientModal'));
+            deleteClientModal.show();
+        }
+
+        // Confirmation de la suppression
+        document.getElementById('confirmDeleteClientButton').addEventListener('click', async () => {
+            const id = document.getElementById('deleteClientId').value;
+
+            const response = await fetch(`/api/user/clients/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (response.ok) {
+                const deleteClientModal = bootstrap.Modal.getInstance(document.getElementById('deleteClientModal'));
+                deleteClientModal.hide();
+                loadClients(); // Rafraîchir la liste des clients après suppression
+            } else {
+                alert('Erreur lors de la suppression du client');
+            }
+        });
+    </script>
+</body>
+</html>

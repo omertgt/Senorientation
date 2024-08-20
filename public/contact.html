@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contactez-Nous - Agence d'Aide à l'Immigration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hero-section {
+            background-image: url('https://plus.unsplash.com/premium_photo-1673843714955-281ce3487fad?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* Remplacez par une URL valide */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+        }
+        .hero-section h1 {
+            font-size: 3em;
+            font-weight: bold;
+        }
+        .hero-section p {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-dark text-white p-4">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="h3">Agence d'Aide à l'Immigration</h1>
+            <a href="login.html" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Se connecter</a>
+        </div>
+    </header>
+
+    <!-- Section Hero -->
+    <section class="hero-section">
+        <div class="container">
+            <h1>Contactez-Nous</h1>
+            <p>Nous sommes là pour vous aider avec toutes vos questions concernant les procédures d'immigration.</p>
+        </div>
+    </section>
+
+    <!-- Formulaire de Contact -->
+    <section class="container my-5">
+        <h2 class="text-center mb-4">Envoyez-nous un message</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form id="contactForm">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="name" placeholder="Votre nom" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Votre email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea class="form-control" id="message" rows="5" placeholder="Votre message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Envoyer le message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center p-4 mt-5">
+        <p>&copy; 2024 Agence d'Aide à l'Immigration. Tous droits réservés.</p>
+        <a href="contact.html" class="text-white">Contactez-nous</a>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email, message })
+            });
+
+            if (response.ok) {
+                alert('Votre message a été envoyé avec succès !');
+                document.getElementById('contactForm').reset();
+            } else {
+                alert('Erreur lors de l\'envoi du message.');
+            }
+        });
+    </script>
+</body>
+</html>
