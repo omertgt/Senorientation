@@ -1,8 +1,9 @@
 {
   "name": "my-mongodb-app",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",  // Assurez-vous que cela pointe vers le fichier principal
   "scripts": {
+    "start": "node server.js",  // Script de démarrage pour Heroku
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,5 +18,3 @@
     "mongoose": "^8.5.3"
   }
 }
-
-
